@@ -16,11 +16,22 @@ All of the gems are designed to work together to provide a fully functional e-co
 barebones spree_core gem and perhaps combine it with your own custom authorization scheme 
 instead of using spree_auth.
 
+
+Installation Steps:
+Pre requisites:
+ 1. Rails 3.0.10
+ 2. Ruby 1.9.3
+ 3. Apache Server
+ 4. Passenger Module for Apache
+ 5. Mysql
+
+
 Clone the git repo   
 
-git clone -b 0-60-stable git://github.com/spree/spree.git
-
+git clone git://github.com/spree/spree.git
 cd spree
+git tag -l v0.60.4
+
 
 Install the gem dependencies
 
@@ -62,19 +73,20 @@ Super Admin is the one who has ability to manage the domain.
 Store owners can register And start their own store. Each store will operate as a unique business and will have a custom domain name and branding. Store owner can act as admin for his domain and he can set his
 Personalised configurations for his shop.
 
+Clone the crux gem in your spree directory:
+cd spree
+git clone https://github.com/loganathan-s/crux.git
+
+cd sandbox
+
 Add to the following gem dependency in sandbox/Gemfile
 
-gem "crux",:git => "git://github.com/railsfactory/crux.git"
-
+gem "crux" ,:path => "../crux"
 gem 'subdomain-fu', '1.0.0.beta2', :git => "git://github.com/nhowell/subdomain-fu.git"
-
 gem 'dynamic_form'
-
 gem 'geokit'
 
 Run
-
-cd sandbox
 
 bundle install
 
@@ -85,10 +97,7 @@ bundle exec rake crux:install
 bundle exec rake db:migrate
 
 
-Add the settings.yml file in sandbox/config
-
-
-
+Add File called settings.yml to sandbox/config directory
 
 For instance:
 ====
@@ -103,17 +112,50 @@ sub_domain: yoursubdomain (eg:shop)
 
 separate_url: yourdomain (eg:shop.storefront)
 
+Sample Settings.yml file:
+
+development:
+ domain_url: http://www.storefront.com
+ secure_domain_url: https://shop.storefront.com
+ sub_domain: shop
+ separate_url: shop.storefront
+
+test:
+ domain_url: http://www.storefront.com
+ secure_domain_url: https://shop.storefront.com
+ sub_domain: shop
+ separate_url: shop.storefront
+ 
+production:
+ domain_url: http://www.storefront.com
+ secure_domain_url: https://shop.storefront.com
+ sub_domain: shop
+ separate_url: shop.storefront
+
 
 Note:
 ====
 
-Super-Admin:spree sample user.
-
 Before register any store, the store registration payment method  should be updated in admin/configuration panel by super admin. Then only the store can be registered.
+URL for Superadmin domainname/login
 
 DNS Subdomain Configuration
 
 At intial, update your store's Mail method.
 
+Before Running the application, configure the host settings:
+Sample Virtualhostfile(For dev environment):
 
-
+  <VirtualHost *:80>
+      ServerName www.storefront.com
+      ServerAlias *.storefront.com
+      RailsEnv development
+      # !!! Be sure to point DocumentRoot to 'public'!
+      DocumentRoot /var/www/rails/spree/sandbox/public    
+      <Directory /var/www/rails/spree/sandbox/public>
+         # This relaxes Apache security settings.
+         AllowOverride None
+         # MultiViews must be turned off.
+         Options -MultiViews
+      </Directory>
+   </VirtualHost>
