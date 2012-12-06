@@ -18,6 +18,8 @@ instead of using spree_auth.
 
 
 Installation Steps:
+====
+
 Pre requisites:
  1. Rails 3.0.10
  2. Ruby 1.9.3
@@ -29,7 +31,9 @@ Pre requisites:
 Clone the git repo   
 
 git clone git://github.com/spree/spree.git
+
 cd spree
+
 git tag -l v0.60.4
 
 
@@ -74,7 +78,9 @@ Store owners can register And start their own store. Each store will operate as 
 Personalised configurations for his shop.
 
 Clone the crux gem in your spree directory:
+
 cd spree
+
 git clone https://github.com/loganathan-s/crux.git
 
 cd sandbox
@@ -82,8 +88,11 @@ cd sandbox
 Add to the following gem dependency in sandbox/Gemfile
 
 gem "crux" ,:path => "../crux"
+
 gem 'subdomain-fu', '1.0.0.beta2', :git => "git://github.com/nhowell/subdomain-fu.git"
+
 gem 'dynamic_form'
+
 gem 'geokit'
 
 Run
@@ -115,21 +124,34 @@ separate_url: yourdomain (eg:shop.storefront)
 Sample Settings.yml file:
 
 development:
+
  domain_url: http://www.storefront.com
+ 
  secure_domain_url: https://shop.storefront.com
+ 
  sub_domain: shop
+ 
  separate_url: shop.storefront
 
 test:
+
  domain_url: http://www.storefront.com
+ 
  secure_domain_url: https://shop.storefront.com
+ 
  sub_domain: shop
+ 
  separate_url: shop.storefront
  
+
 production:
+
  domain_url: http://www.storefront.com
+ 
  secure_domain_url: https://shop.storefront.com
+ 
  sub_domain: shop
+ 
  separate_url: shop.storefront
 
 
@@ -144,18 +166,29 @@ DNS Subdomain Configuration
 At intial, update your store's Mail method.
 
 Before Running the application, configure the host settings:
+
 Sample Virtualhostfile(For dev environment):
 
+
   <VirtualHost *:80>
+  
       ServerName www.storefront.com
+      
       ServerAlias *.storefront.com
+      
       RailsEnv development
-      # !!! Be sure to point DocumentRoot to 'public'!
+      
       DocumentRoot /var/www/rails/spree/sandbox/public    
+      
       <Directory /var/www/rails/spree/sandbox/public>
+      
          # This relaxes Apache security settings.
          AllowOverride None
+	 
          # MultiViews must be turned off.
+	 
          Options -MultiViews
+	 
       </Directory>
+      
    </VirtualHost>
